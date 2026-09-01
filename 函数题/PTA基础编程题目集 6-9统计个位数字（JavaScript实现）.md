@@ -16,7 +16,10 @@ function Count_Digit(N, D) { /* ... */ }
 
 ```js
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 function Count_Digit(N, D) { /* 你的代码将被嵌在这里 */ }
 
@@ -39,9 +42,26 @@ rl.on('line', (line) => {
 3
 ```
 
+### 函数部分
+
+```text
+函数 Count_Digit(N, D):
+    m ← |N|
+    如果 N 等于 0 且 D 等于 0：
+        返回 1
+    count ← 0
+    当 m 不为 0 时：
+        如果 m 除以 10 的余数等于 D：
+            count ← count + 1
+        m ← floor(m / 10)
+    返回 count
+```
+
 ## 解题思路
 
-这道题的核心是**逐位拆解整数并统计目标数字 D 的出现次数**。由于 N 可能是负数，需要先取绝对值，且特别处理 N=0 且 D=0 的特殊情形（因为 while(0) 不会进入循环，统计会得到 0）。
+这道题的核心是**逐位拆解整数并统计目标数字 D 的出现次数**。
+由于 N 可能是负数，需要先取绝对值，且特别处理 N=0 且 D=0 的特殊情形
+（因为 while(0) 不会进入循环，统计会得到 0）。
 
 ### 核心问题分析
 
@@ -86,7 +106,10 @@ rl.on('line', (line) => {
 // 空间复杂度：O(1) — 仅使用常数个辅助变量
 
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 // 函数：Count_Digit
 // 功能：统计 N 中数字 D 的出现次数
@@ -114,20 +137,23 @@ rl.on('line', (line) => {
 });
 ```
 
-
 ## 代码流程说明
 
 ### 1. 主函数
+
 - 用 readline 读入 N 和 D（parseInt 解析）
 - 调用 Count_Digit(N, D) 输出返回值（console.log）
 
 ### 2. Count_Digit：符号处理
+
 - 若 N < 0：m = -N；否则 m = N（保留 N 原值以便 0 的特判）
 
 ### 3. Count_Digit：0 的特判
+
 - 若 N === 0 && D === 0：直接 return 1，避免 while(0) 跳过计数
 
 ### 4. Count_Digit：循环统计
+
 - count = 0
 - while (m !== 0)：
   - 当前位 m%10 === D → count++
@@ -156,6 +182,20 @@ flowchart TD
   F --> M["结束"]
   L --> M
 ```
+
+### 复杂度分析
+
+设 N 的十进制表示有 `d` 位：
+
+- 时间复杂度：`O(d)`，每次循环处理一位数字。
+- 空间复杂度：`O(1)`，只使用当前数、计数器和循环变量。
+
+### 常见易错点
+
+1. 负号不是数字，统计前应使用 N 的绝对值。
+2. N=0 且 D=0 时，数字 0 本身应计数一次；不能只依赖 `while (m)`。
+3. 每次取出个位后必须用整除 10 的方式去掉该位，否则会死循环。
+4. D 的取值范围是 0 到 9，不要把目标字符或负号纳入统计。
 
 ## 解题流程图
 

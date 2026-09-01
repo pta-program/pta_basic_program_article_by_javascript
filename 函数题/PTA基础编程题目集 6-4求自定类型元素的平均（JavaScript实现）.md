@@ -16,14 +16,17 @@ function Average(S, N) { /* 求 N 个元素的平均值 */ }
 
 ```js
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 let lines = []; // 保存所有输入行
 rl.on('line', (line) => { // 监听每一行输入
     lines.push(line.trim()); // 记录当前行
     if (lines.length === 2) { // 读入 N 与元素两行后开始处理
         const N = parseInt(lines[0], 10); // 读取数组长度 N
-        const S = lines[1].split(' ').map(Number); // 读取 N 个元素
+        const S = lines[1].split(/\s+/).map(Number); // 读取 N 个元素
         console.log(Average(S, N).toFixed(2)); // 输出平均值，保留 2 位小数
         rl.close(); // 关闭接口
     }
@@ -45,6 +48,16 @@ rl.on('line', (line) => { // 监听每一行输入
 13.77
 ```
 
+### 函数部分
+
+```text
+函数 Average(S, N):
+    total ← 0
+    对 i 从 0 到 N-1：
+        total ← total + S[i]
+    返回 total / N
+```
+
 ## 解题思路
 
 这道题的核心是**求数组元素的算术平均值**，即总和除以元素个数。
@@ -52,12 +65,15 @@ rl.on('line', (line) => { // 监听每一行输入
 ### 核心问题分析
 
 平均值 = (S[0] + S[1] + ... + S[N-1]) / N。实现时有两个关键细节：
-1. **求和精度**：在 C 中若用 float 累加，N 较大时容易累积误差，因此通常用更高精度的 double 做累加器；在 JavaScript 中所有数字统一为 IEEE 754 双精度浮点（Number），累加时天然保持 double 精度。
+
+1. **求和精度**：在 C 中若用 float 累加，N 较大时容易累积误差，因此通常用更高精度的 double 做累加器；
+   在 JavaScript 中所有数字统一为 IEEE 754 双精度浮点（Number），累加时天然保持 double 精度。
 2. **除法类型**：必须是浮点除法而非整数除法——JS 中 `temp / N` 总是浮点除法，不会像 C 那样发生整数截断。
 
 ### 算法原理说明
 
 线性累加 + 最后除 N：
+
 - 声明累加器 temp = 0
 - 遍历数组逐个 temp += S[i]（JS 数字统一为 Number 类型，无需类型提升）
 - average = temp / N
@@ -86,7 +102,10 @@ rl.on('line', (line) => { // 监听每一行输入
 // 空间复杂度：O(1) — 仅使用常数个辅助变量
 
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 // 函数：Average
 // 功能：求 N 个元素的平均值
@@ -108,26 +127,28 @@ rl.on('line', (line) => { // 监听每一行输入
     lines.push(line.trim()); // 记录当前行
     if (lines.length === 2) { // 读入 N 与元素两行后开始处理
         const N = parseInt(lines[0], 10); // 读取数组长度 N
-        const S = lines[1].split(' ').map(Number); // 读取 N 个元素
+        const S = lines[1].split(/\s+/).map(Number); // 读取 N 个元素
         console.log(Average(S, N).toFixed(2)); // 输出平均值，保留 2 位小数
         rl.close(); // 关闭接口
     }
 });
 ```
 
-
 ## 代码流程说明
 
 ### 1. 主程序：读取数据
+
 - 用 readline 读入 N
 - 循环读入 N 个元素存入数组 S
 - console.log 配合 toFixed(2) 保留两位小数输出
 
 ### 2. Average 函数：求和阶段
+
 - `let temp = 0`：累加器初始化
 - for 循环 i = 0 ~ N-1：temp += S[i]（JS 数字统一为 Number 类型）
 
 ### 3. Average 函数：求平均
+
 - `average = temp / N`：浮点除法，得到平均值
 - return average
 
@@ -144,6 +165,18 @@ flowchart TD
   F --> G["return average"]
   G --> H["结束"]
 ```
+
+### 复杂度分析
+
+- 时间复杂度：`O(N)`，需要遍历全部 N 个元素求和。
+- 空间复杂度：`O(1)`，只使用累加器、循环变量和平均值变量。
+
+### 常见易错点
+
+1. 求平均值必须先累加全部元素，再除以 N，不能在循环中使用整数除法。
+2. 应从下标 0 遍历到 `N - 1`，不要漏掉首个或末个元素。
+3. 题目保证 N 为正整数；若在其他场景处理 N=0，应先定义除数为 0 时的行为。
+4. 函数返回数值即可，保留两位小数由调用方完成。
 
 ## 解题流程图
 

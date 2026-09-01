@@ -269,13 +269,13 @@ hasLower = Low < Open && Low < Close;  // 判断最低价是否低于开盘价�
 **输入：**
 
 ```text
-（可取题目边界附近的值，如最小值或最大值）
+5 5.2 4.9 5
 ```
 
 **输出：**
 
 ```text
-（依据题意推导的正确结果）
+R-Cross with Lower Shadow and Upper Shadow
 ```
 
 ### 测试二：特殊用例
@@ -283,13 +283,13 @@ hasLower = Low < Open && Low < Close;  // 判断最低价是否低于开盘价�
 **输入：**
 
 ```text
-（可取易错点，如 0、单一元素、全同值等）
+5 5 5 5
 ```
 
 **输出：**
 
 ```text
-（对应正确结果）
+R-Cross
 ```
 
 ## 总结

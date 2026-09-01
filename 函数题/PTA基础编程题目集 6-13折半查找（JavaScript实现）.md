@@ -16,7 +16,10 @@ function Search_Bin(T, k) { /* ... */ }
 
 ```js
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 /* 顺序表：用 JS 对象模拟 { R, length }，R[1..length] 存放元素（1 起下标，R[0] 不用） */
 function Search_Bin(T, k) { /* 请在这里填写答案 */ }
@@ -76,14 +79,34 @@ rl.on('line', (line) => {
 NOT FOUND
 ```
 
+### 函数部分
+
+```text
+函数 Search_Bin(T, k):
+    low ← 1
+    high ← T.length
+    当 low ≤ high 时：
+        mid ← floor((low + high) / 2)
+        如果 T.R[mid].key 等于 k：
+            返回 mid
+        如果 T.R[mid].key 大于 k：
+            high ← mid - 1
+        否则：
+            low ← mid + 1
+    返回 0
+```
+
 ## 解题思路
 
 这道题的核心是**有序顺序表上的二分查找（折半查找）**。前提是表已按关键字升序排列（严格递增），每次取中点比较，可把搜索区间减半。
 
 ### 核心问题分析
 
-1. **下标约定**：题目样例中存储从下标 1 开始（Create 函数 for i=1..length，输入 1 3 5 7 9 查找 7 得到位置 4，即 1 起下标），因此 low 应初始为 1，high 为 T.length。
-2. **中点计算**：mid = Math.trunc((low + high) / 2)（向下取整）。也可以写成 low + Math.trunc((high - low) / 2) 防止溢出，此处题目数据量小，前者足够。
+1. **下标约定**：题目样例中存储从下标 1 开始（Create 函数 for i=1..length，
+   输入 1 3 5 7 9 查找 7 得到位置 4，即 1 起下标），因此 low 应初始为 1，
+   high 为 T.length。
+2. **中点计算**：mid = Math.trunc((low + high) / 2)（向下取整）。
+   也可以写成 low + Math.trunc((high - low) / 2) 防止溢出，此处题目数据量小，前者足够。
 3. **三种分支**：
    - R[mid].key == k → 命中，return mid
    - R[mid].key >  k → 目标在左半区，high = mid - 1
@@ -93,6 +116,7 @@ NOT FOUND
 ### 算法原理说明
 
 循环迭代式二分查找：
+
 - 初始化 low = 1, high = T.length
 - while (low <= high)：
   - mid = Math.trunc((low + high) / 2)
@@ -126,7 +150,10 @@ NOT FOUND
 // 空间复杂度：O(1) — 仅使用常数个辅助变量
 
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 // 函数：Search_Bin
 // 功能：在有序顺序表上二分查找
@@ -164,18 +191,20 @@ rl.on('line', (line) => {
 });
 ```
 
-
 ## 代码流程说明
 
 ### 1. 主函数 & 建表
+
 - 建表：用 readline 读 length → 依次读入 R[1..length].key（用对象模拟顺序表，1 起下标）
 - 再读 k，调用 Search_Bin(T, k)
 - pos === 0 → 打印 NOT FOUND；否则打印 pos
 
 ### 2. Search_Bin 初始化
+
 - low = 1，high = T.length（1 起下标闭区间）
 
 ### 3. while (low <= high) 主循环
+
 - mid = Math.trunc((low + high) / 2)：取中点（向下取整）
 - 三路分支：
   - 命中 → return mid
@@ -183,6 +212,7 @@ rl.on('line', (line) => {
   - 中点值太小 → low = mid + 1
 
 ### 4. 循环退出
+
 - low > high 表示区间已空 → return 0
 
 ## 代码流程图
@@ -202,6 +232,18 @@ flowchart TD
   F --> J["结束"]
   I --> J
 ```
+
+### 复杂度分析
+
+- 时间复杂度：`O(log N)`，每次比较都将查找区间缩小约一半。
+- 空间复杂度：`O(1)`，只使用左右边界和中间位置等辅助变量。
+
+### 常见易错点
+
+1. 表中元素从 `R[1]` 开始存放，因此 `low` 必须初始化为 1，而不是 0。
+2. 查找失败时函数返回 0，主程序再把 0 转换为 `NOT FOUND`。
+3. 中点移动后应使用 `high = mid - 1` 或 `low = mid + 1`，否则可能重复检查同一位置。
+4. 二分查找依赖表严格递增；若数据无序，不能直接套用该算法。
 
 ## 解题流程图
 

@@ -27,7 +27,10 @@ const node = { data: 结点数据, next: 指向下一个结点的引用 };
 
 ```js
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 /* 用 JS 对象模拟单链表结点 */
 function Node(data) {
@@ -69,6 +72,20 @@ rl.on('line', (line) => {
 846
 ```
 
+### 函数部分
+
+```text
+函数 FactorialSum(L):
+    total ← 0
+    当 L 不为空时：
+        factorial ← 1
+        对 i 从 L.data 递减到 1：
+            factorial ← factorial × i
+        total ← total + factorial
+        L ← L.next
+    返回 total
+```
+
 ## 解题思路
 
 这道题的核心是**单链表遍历 + 各结点数据的阶乘求和**：先沿 next 指针走完整个链表，对每个结点的 data 值计算其阶乘，再把所有阶乘加起来。
@@ -82,6 +99,7 @@ rl.on('line', (line) => {
 ### 算法原理说明
 
 外层 while 循环走完整条链表：
+
 - 内层 for 循环计算当前结点 data 的阶乘：从 data 连乘到 1
 - 每个结点的阶乘 sum 累加到 totalsum
 
@@ -110,7 +128,10 @@ rl.on('line', (line) => {
 // 空间复杂度：O(1) — 仅使用常数个辅助变量
 
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 // 用 JS 对象模拟单链表结点
 function Node(data) {
@@ -155,14 +176,15 @@ rl.on('line', (line) => {
 });
 ```
 
-
 ## 代码流程说明
 
 ### 1. 主函数：建立链表
+
 - 用 readline 读入结点数 N（parseInt 解析）
 - 循环 N 次：new Node() 创建新结点 → 读 data → 头插法插入（p.next = L; L = p），形成倒序链表（但求和与顺序无关，结果正确）
 
 ### 2. FactorialSum 函数：遍历 + 阶乘
+
 - `totalsum = 0` 初始化总和
 - while (L !== null)：
   - `sum = 1` 重置阶乘初值
@@ -189,6 +211,20 @@ flowchart TD
   C -- "否" --> J["return totalsum"]
   J --> K["结束"]
 ```
+
+### 复杂度分析
+
+设链表有 `m` 个结点，第 `j` 个结点的值为 `dⱼ`：
+
+- 时间复杂度：`O(m + ∑dⱼ)`，既要遍历链表，也要完成每个结点的阶乘连乘。
+- 空间复杂度：`O(1)`，不创建新的链表，只使用固定数量的辅助变量。
+
+### 常见易错点
+
+1. 遍历结束条件是结点指针为空，即 `L === null`，不能按数组下标访问链表。
+2. 每处理完一个结点都要执行 `L = L.next`，否则会重复处理同一结点。
+3. `0! = 1`，所以当前阶乘的累加器必须从 1 开始。
+4. 头插法建立的链表顺序与输入顺序相反，但阶乘求和与访问顺序无关。
 
 ## 解题流程图
 

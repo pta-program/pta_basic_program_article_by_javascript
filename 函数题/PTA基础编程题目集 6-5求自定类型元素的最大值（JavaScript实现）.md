@@ -16,14 +16,17 @@ function Max(S, N) { /* 返回 N 个元素中的最大值 */ }
 
 ```js
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 let lines = []; // 保存所有输入行
 rl.on('line', (line) => { // 监听每一行输入
     lines.push(line.trim()); // 记录当前行
     if (lines.length === 2) { // 读入 N 与元素两行后开始处理
         const N = parseInt(lines[0], 10); // 读取数组长度 N
-        const S = lines[1].split(' ').map(Number); // 读取 N 个元素
+        const S = lines[1].split(/\s+/).map(Number); // 读取 N 个元素
         console.log(Max(S, N).toFixed(2)); // 输出最大值，保留 2 位小数
         rl.close(); // 关闭接口
     }
@@ -45,17 +48,30 @@ rl.on('line', (line) => { // 监听每一行输入
 34.00
 ```
 
+### 函数部分
+
+```text
+函数 Max(S, N):
+    max ← S[0]
+    对 i 从 1 到 N-1：
+        如果 S[i] > max：
+            max ← S[i]
+    返回 max
+```
+
 ## 解题思路
 
 这道题的核心是**一次遍历数组求最大值**，即打擂台算法。
 
 ### 核心问题分析
 
-找最大值需要把数组中所有元素进行两两比较，但不需要真的做 O(N²) 全对比——只需要维护一个"当前最大值"max，然后逐个和新元素比较，遇到更大的就更新max，这样 O(N) 一次遍历即可。
+找最大值需要把数组中所有元素进行两两比较，但不需要真的做 O(N²) 全对比——只需要维护一个"当前最大值"max，
+然后逐个和新元素比较，遇到更大的就更新max，这样 O(N) 一次遍历即可。
 
 ### 算法原理说明
 
 打擂台法（线性扫描）：
+
 1. 令 max 初始为第一个元素 S[0]（题目保证 N≥1）
 2. 从下标 1 开始遍历到 N-1：
    - 如果 S[i] > max，则 max = S[i]（更新冠军）
@@ -83,7 +99,10 @@ rl.on('line', (line) => { // 监听每一行输入
 // 空间复杂度：O(1) — 仅使用常数个辅助变量
 
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 // 函数：Max
 // 功能：找出数组中的最大值
@@ -106,25 +125,27 @@ rl.on('line', (line) => { // 监听每一行输入
     lines.push(line.trim()); // 记录当前行
     if (lines.length === 2) { // 读入 N 与元素两行后开始处理
         const N = parseInt(lines[0], 10); // 读取数组长度 N
-        const S = lines[1].split(' ').map(Number); // 读取 N 个元素
+        const S = lines[1].split(/\s+/).map(Number); // 读取 N 个元素
         console.log(Max(S, N).toFixed(2)); // 输出最大值，保留 2 位小数
         rl.close(); // 关闭接口
     }
 });
 ```
 
-
 ## 代码流程说明
 
 ### 1. 主程序
+
 - 用 readline 读入 N 与数组 S
 - 调用 Max 函数并输出（toFixed(2) 两位小数）
 
 ### 2. Max 函数初始化
+
 - `max = S[0]`：把第一个元素当成"临时冠军"
 - i 从 1 开始（第 0 号已考察过了）
 
 ### 3. 打擂台循环
+
 - 对每个 S[i]：
   - 若 S[i] > max → max = S[i]（替换冠军）
 - 直到 i == N 结束
@@ -145,6 +166,18 @@ flowchart TD
   C -- "否" --> G["return max"]
   G --> H["结束"]
 ```
+
+### 复杂度分析
+
+- 时间复杂度：`O(N)`，每个元素最多参与一次比较。
+- 空间复杂度：`O(1)`，只保存当前最大值和循环下标。
+
+### 常见易错点
+
+1. 初始最大值应取 `S[0]`，不能固定设为 0，否则全为负数时会得到错误结果。
+2. 从下标 1 开始比较，避免把第一个元素重复处理。
+3. 题目保证 N 为正整数，因此可以安全访问 `S[0]`；若无此保证则需先处理空数组。
+4. 返回最大值即可，输出格式化由裁判程序完成。
 
 ## 解题流程图
 

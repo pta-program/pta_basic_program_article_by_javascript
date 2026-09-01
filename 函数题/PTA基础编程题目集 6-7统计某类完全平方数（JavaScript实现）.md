@@ -16,7 +16,10 @@ function IsTheNumber(N) { /* ... */ }
 
 ```js
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 function IsTheNumber(N) { /* 你的代码将被嵌在这里 */ }
 
@@ -44,21 +47,37 @@ rl.on('line', (line) => {
 cnt = 6
 ```
 
+### 函数部分
+
+```text
+函数 IsTheNumber(N):
+    digits ← 拆出 N 的所有十进制数字
+    root ← floor(sqrt(N))
+    如果 root × root 不等于 N：
+        返回 0
+    如果 digits 中存在相同的两个数字：
+        返回 1
+    返回 0
+```
+
 ## 解题思路
 
 这道题的核心是对单个整数 `N` 同时做两个判断：**是否为完全平方数**，以及**各位数字中是否至少有两位相同**。两者都满足时返回 1，否则返回 0。
 
 ### 核心问题分析
 
-1. **完全平方数判定**：对 N 开平方取整得 x = Math.trunc(Math.sqrt(N))，若 x*x === N，则是完全平方数。需要注意浮点数精度，但 PTA 数据范围下直接使用 Math.sqrt 即可。
+1. **完全平方数判定**：对 N 开平方取整得 x = Math.trunc(Math.sqrt(N))，若 x*x === N，则是完全平方数。
+   需要注意浮点数精度，但 PTA 数据范围下直接使用 Math.sqrt 即可。
 2. **重复数字检测**：把 N 的每一位数字拆出存入数组 a[]，再用双重循环两两比较 a[i] 和 a[j]（i<j），只要有一对相等就说明存在重复数字。
 
 ### 算法原理说明
 
 步骤拆分：
+
 1. 用"除 10 取余"法拆分 N 的每一位到数组 a[]（低位在前），j 记录最高位的下标。
 2. x = Math.trunc(Math.sqrt(N))，y = x * x，y === N 即判定为完全平方数。
-3. 双重 for (m=0..j, n=m+1..j) 检查 a[m] === a[n]，若找到一对且 y === N 则立刻 return 1；遍历完未找到 return 0。
+3. 双重 for (m=0..j, n=m+1..j) 检查 a[m] === a[n]，若找到一对且 y === N 则立刻 return 1；
+   遍历完未找到 return 0。
 
 ### 具体计算步骤
 
@@ -85,7 +104,10 @@ cnt = 6
 // 空间复杂度：O(1) — 仅使用固定大小数组
 
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 // 函数：IsTheNumber
 // 功能：判断 N 是否为完全平方数且至少含两位相同数字
@@ -126,24 +148,27 @@ rl.on('line', (line) => {
 });
 ```
 
-
 ## 代码流程说明
 
 ### 1. 主函数：区间遍历
+
 - 用 readline 读入 n1, n2（parseInt 解析）
 - cnt = 0；循环 i 从 n1 到 n2：IsTheNumber(i) 为真 cnt++
 - 输出 cnt（console.log）
 
 ### 2. IsTheNumber 函数：拆位
+
 - M = N（保护原参数不被修改）
 - while (M >= 10)：每次 M%10 取个位 → a[j++]，M = Math.trunc(M/10) 去个位
 - 循环结束后把剩余的最高位也放入 a[j]
 
 ### 3. 完全平方数判定
+
 - x = Math.trunc(Math.sqrt(N)); y = x*x;
 - y === N 则是完全平方数
 
 ### 4. 重复数字检测
+
 - 两层循环：m 固定，n 从 m+1 到 j 依次对比 a[m] 和 a[n]
 - 发现相等立刻：若 y === N return 1，否则 return 0
 - 循环结束没找到 return 0
@@ -175,6 +200,20 @@ flowchart TD
   N --> R
   Q --> R
 ```
+
+### 复杂度分析
+
+设待判断数有 `d` 位，区间中有 `k` 个整数：
+
+- 时间复杂度：单个整数为 `O(d²)`；扫描区间总计为 `O(kd²)`。其中开平方和拆位为 `O(d)`，两两比较是主要开销。
+- 空间复杂度：`O(d)`，需要数组保存当前整数的各位数字；在固定整型范围下可视为 `O(1)`。
+
+### 常见易错点
+
+1. 必须同时满足“完全平方数”和“至少两位数字相同”两个条件，不能只判断其中一个。
+2. 拆位结束后不要漏掉最高位；除 10 循环只处理低位，剩余值还需放入数组。
+3. 发现重复数字后仍要检查平方条件，不能仅凭重复数字返回 1。
+4. 完全平方数判定应比较 `floor(sqrt(N))²` 与 N，而不是只判断开平方结果是否为整数。
 
 ## 解题流程图
 

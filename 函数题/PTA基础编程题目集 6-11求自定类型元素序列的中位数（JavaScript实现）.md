@@ -16,7 +16,10 @@ function Median(A, N) { /* ... */ }
 
 ```js
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 function Median(A, N) { /* 你的代码将被嵌在这里 */ }
 
@@ -46,19 +49,33 @@ rl.on('line', (line) => {
 12.30
 ```
 
+### 函数部分
+
+```text
+函数 Median(A, N):
+    gap ← floor(N / 2)
+    当 gap > 0 时：
+        按 gap 对数组做降序插入排序
+        gap ← floor(gap / 2)
+    返回 A[floor((N - 1) / 2)]
+```
+
 ## 解题思路
 
 这道题的核心是**求 N 个元素的中位数**。题目定义的中位数是"第 ⌊(N+1)/2⌋ 大的元素"，等价于把数组降序排列后，取下标为 (N-1)/2（整数除法向下取整）的元素。
 
 ### 核心问题分析
 
-1. **排序选择**：中位数的最直接求法是"先排序再取中间"。由于 PTA 函数题往往对时间复杂度有要求（N 可能较大），选择 O(N^1.3) 左右的希尔排序比简单插入/冒泡 O(N²) 更稳妥。
+1. **排序选择**：中位数的最直接求法是"先排序再取中间"。
+   由于 PTA 函数题往往对时间复杂度有要求（N 可能较大），选择 O(N^1.3) 左右的希尔排序比简单插入/冒泡 O(N²) 更稳妥。
 2. **降序 or 升序**：题目要求的是"第 k 大"，用降序排序后 A[(N-1)/2] 正好对应第 ⌊(N+1)/2⌋ 大的元素。若用升序则需要计算转换下标。
-3. **希尔排序增量**：采用经典的"折半增量序列"gap = Math.trunc(N/2) → gap = Math.trunc(gap/2) → ... → gap=1。gap=1 时退化为普通插入排序，但此时数组已基本有序。
+3. **希尔排序增量**：采用经典的"折半增量序列"gap = Math.trunc(N/2)
+   → gap = Math.trunc(gap/2) → ... → gap=1。gap=1 时退化为普通插入排序，但此时数组已基本有序。
 
 ### 算法原理说明
 
 希尔排序（Shell Sort，降序）+ 取中间位：
+
 1. 初始 gap = Math.trunc(N / 2)。
 2. 对每个 gap，把数组分成 gap 组（按下标 mod gap 分组），对每组做"降序插入排序"：
    - i 从 gap 到 N-1：temp = A[i] 暂存
@@ -94,7 +111,10 @@ rl.on('line', (line) => {
 // 空间复杂度：O(1) — 原地排序
 
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 // 函数：Median
 // 功能：求中位数
@@ -130,14 +150,15 @@ rl.on('line', (line) => {
 });
 ```
 
-
 ## 代码流程说明
 
 ### 1. 主函数：读数据
+
 - 用 readline 读入 N，再读入 N 个浮点数存入数组 A（Number 解析）
 - 调用 Median 后保留两位小数输出（toFixed(2)）
 
 ### 2. Median 函数：希尔排序（降序）
+
 - gap = Math.trunc(N/2)；当 gap > 0 时：
   - 外层 i = gap..N-1：每个待插入元素
     - temp = A[i]
@@ -146,6 +167,7 @@ rl.on('line', (line) => {
   - gap = Math.trunc(gap/2)
 
 ### 3. 取中位数
+
 - return A[Math.trunc((N-1)/2)]
 
 ## 代码流程图
@@ -167,6 +189,18 @@ flowchart TD
   C -- "否" --> K["return A[Math.trunc((N-1)/2)]"]
   K --> L["结束"]
 ```
+
+### 复杂度分析
+
+- 时间复杂度：希尔排序的实际复杂度取决于增量序列；对当前折半增量序列可按经验记为约 `O(N^1.3)`，最坏情况应按所用序列具体分析。
+- 空间复杂度：`O(1)`，排序在原数组上进行，只使用临时元素和循环变量。
+
+### 常见易错点
+
+1. 题目求的是第 `floor((N+1)/2)` 大的元素，因此应按降序取下标 `floor((N-1)/2)`。
+2. JavaScript 数组从下标 0 开始，不能直接使用顺序表教材中的 1 起始下标公式。
+3. 希尔排序的移动条件应为前一个元素小于待插入元素，才能保持降序。
+4. N 为 1 时 gap 为 0，应直接返回唯一元素，不能访问不存在的下标。
 
 ## 解题流程图
 

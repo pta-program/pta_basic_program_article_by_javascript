@@ -16,14 +16,17 @@ function Sum(List, N) { /* 求 N 个整数的和 */ }
 
 ```js
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 let lines = []; // 保存所有输入行
 rl.on('line', (line) => { // 监听每一行输入
     lines.push(line.trim()); // 记录当前行
     if (lines.length === 2) { // 读入 N 与整数两行后开始处理
         const N = parseInt(lines[0], 10); // 读取数组长度 N
-        const List = lines[1].split(' ').map(Number); // 读取 N 个整数
+        const List = lines[1].split(/\s+/).map(Number); // 读取 N 个整数
         console.log(Sum(List, N)); // 调用 Sum 函数求和并输出
         rl.close(); // 关闭接口
     }
@@ -45,17 +48,29 @@ rl.on('line', (line) => { // 监听每一行输入
 41
 ```
 
+### 函数部分
+
+```text
+函数 Sum(List, N):
+    total ← 0
+    对 i 从 0 到 N-1：
+        total ← total + List[i]
+    返回 total
+```
+
 ## 解题思路
 
 这道题的核心是**数组线性累加求和**。给定 N 个整数组成的数组，求其所有元素之和。
 
 ### 核心问题分析
 
-这是最经典的遍历+累加问题。由于没有任何结构性质可以利用（如前缀和预处理），只能逐个元素读取并加入累加器。必须访问所有 N 个元素各一次，因此时间复杂度下限即为 Ω(N)。
+这是最经典的遍历+累加问题。由于没有任何结构性质可以利用（如前缀和预处理），只能逐个元素读取并加入累加器。
+必须访问所有 N 个元素各一次，因此时间复杂度下限即为 Ω(N)。
 
 ### 算法原理说明
 
-设置累加器 temp 初始为 0，用 for 循环按数组下标从 0 到 N-1 依次访问每个元素 List[i]，执行 temp += List[i]。整个过程只需要常数级别的辅助空间（仅 temp 和循环变量 i）。
+设置累加器 temp 初始为 0，用 for 循环按数组下标从 0 到 N-1 依次访问每个元素 List[i]，
+执行 temp += List[i]。整个过程只需要常数级别的辅助空间（仅 temp 和循环变量 i）。
 
 ### 具体计算步骤
 
@@ -79,7 +94,10 @@ rl.on('line', (line) => { // 监听每一行输入
 // 空间复杂度：O(1) — 只使用了常数个辅助变量
 
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 // 函数：Sum
 // 功能：遍历数组，求所有元素之和
@@ -100,24 +118,26 @@ rl.on('line', (line) => { // 监听每一行输入
     lines.push(line.trim()); // 记录当前行
     if (lines.length === 2) { // 读入 N 与整数两行后开始处理
         const N = parseInt(lines[0], 10); // 读取数组长度 N
-        const List = lines[1].split(' ').map(Number); // 读取 N 个整数
+        const List = lines[1].split(/\s+/).map(Number); // 读取 N 个整数
         console.log(Sum(List, N)); // 调用 Sum 函数求和并输出
         rl.close(); // 关闭接口
     }
 });
 ```
 
-
 ## 代码流程说明
 
 ### 1. 主程序：输入准备
+
 - 用 readline 读取数组长度 N
 - 依次读入 N 个整数存入数组 List
 
 ### 2. 调用 Sum 函数
+
 - console.log 输出返回值
 
 ### 3. Sum 函数内部
+
 - `let temp = 0`：初始化累加器为 0
 - for 循环 i 从 0 到 N-1：
   - `temp += List[i]`：把当前元素加入累加器
@@ -139,6 +159,17 @@ flowchart TD
   I --> J["输出 temp"]
   J --> K["结束"]
 ```
+
+### 复杂度分析
+
+- 时间复杂度：`O(N)`，每个数组元素访问一次。
+- 空间复杂度：`O(1)`，只使用累加器和循环下标。
+
+### 常见易错点
+
+1. 累加器初值应为 0，不能使用第一个元素作为初值后又从下标 0 开始累加。
+2. JavaScript 数组从下标 0 开始，遍历范围应为 `0` 到 `N - 1`。
+3. 应按题目给出的 N 控制循环，不要误把数组长度或输入行数当成元素个数。
 
 ## 解题流程图
 

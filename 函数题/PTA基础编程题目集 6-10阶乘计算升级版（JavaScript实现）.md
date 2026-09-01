@@ -16,7 +16,10 @@ function Print_Factorial(N) { /* ... */ }
 
 ```js
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 function Print_Factorial(N) { /* 你的代码将被嵌在这里 */ }
 
@@ -39,9 +42,23 @@ rl.on('line', (line) => {
 1307674368000
 ```
 
+### 函数部分
+
+```text
+函数 Print_Factorial(N):
+    如果 N < 0：
+        输出 Invalid input
+        返回
+    result ← 1n
+    对 i 从 2 到 N：
+        result ← result × BigInt(i)
+    输出 result 的十进制表示
+```
+
 ## 解题思路
 
-这道题的核心是**大整数阶乘**：N 可高达 1000，1000! 约 2568 位，远超普通数值类型的精确表示范围。JS 内置的 BigInt 类型可以精确表示任意大的整数（1000! 约 2568 位，BigInt 完全支持），因此直接使用 BigInt 连乘即可得到精确结果，无需手工模拟竖式乘法。
+这道题的核心是**大整数阶乘**：N 可高达 1000，1000! 约 2568 位，远超普通数值类型的精确表示范围。
+JS 内置的 BigInt 类型可以精确表示任意大的整数（1000! 约 2568 位，BigInt 完全支持），因此直接使用 BigInt 连乘即可得到精确结果，无需手工模拟竖式乘法。
 
 ### 核心问题分析
 
@@ -80,7 +97,10 @@ rl.on('line', (line) => {
 // 空间复杂度：O(M) — 存储结果位数
 
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 // 函数：Print_Factorial
 // 功能：打印 N! 或 Invalid input
@@ -106,17 +126,19 @@ rl.on('line', (line) => {
 });
 ```
 
-
 ## 代码流程说明
 
 ### 1. 输入校验 & 初始化
+
 - N < 0 → console.log('Invalid input')
 - N ≥ 0 → result = 1n（BigInt 类型，字面量以 n 结尾）
 
 ### 2. 外层 i = 2n..N：BigInt 连乘
+
 - result *= i（BigInt 乘法自动处理进位与位数扩展，无需手工按位计算）
 
 ### 3. 打印结果
+
 - console.log(String(result)) 输出十进制字符串
 
 ## 代码流程图
@@ -128,13 +150,27 @@ flowchart TD
   B -- "否" --> D["result = 1n（BigInt）"]
   D --> E["i = 2n"]
   E --> F{"i <= N ?"}
-  F -- "是" --> G["result *= i"]
+  F -- "是" --> G["result *= BigInt(i)"]
   G --> H["i++"]
   H --> F
   F -- "否" --> I["输出 String(result)"]
   I --> P["结束"]
   C --> P
 ```
+
+### 复杂度分析
+
+设最终结果有 `M` 位十进制数字：
+
+- 时间复杂度：`O(N × M)` 的大整数运算量；每次乘法的实际成本随结果位数增长。
+- 空间复杂度：`O(M)`，需要保存不断增长的阶乘结果。
+
+### 常见易错点
+
+1. 1000! 远超 JavaScript Number 的安全整数范围，必须使用 `BigInt`，不能使用普通数字连乘。
+2. `BigInt` 只能与 `BigInt` 运算，循环因子应转换为 `BigInt(i)`。
+3. N<0 时应输出 `Invalid input` 并结束函数；N=0 时应输出 1。
+4. BigInt 输出时应转换为字符串，不能依赖普通 Number 的格式化方式。
 
 ## 解题流程图
 
@@ -145,7 +181,7 @@ flowchart TD
   C -- "是" --> D["输出 Invalid input"]
   C -- "否" --> E["result = 1n（BigInt）"]
   E --> F["i 从 2n 到 N"]
-  F --> G["result *= i"]
+  F --> G["result *= BigInt(i)"]
   G --> H["i++"]
   H --> F
   F -- "完成" --> I["输出 String(result)"]

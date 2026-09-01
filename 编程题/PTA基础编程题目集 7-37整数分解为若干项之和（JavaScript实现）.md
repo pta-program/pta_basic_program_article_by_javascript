@@ -339,13 +339,13 @@ function dfs_print(start, remaining, depth) {
 **输入：**
 
 ```text
-（可取题目边界附近的值，如最小值或最大值）
+1
 ```
 
 **输出：**
 
 ```text
-（依据题意推导的正确结果）
+1=1
 ```
 
 ### 测试二：特殊用例
@@ -353,13 +353,13 @@ function dfs_print(start, remaining, depth) {
 **输入：**
 
 ```text
-（可取易错点，如 0、单一元素、全同值等）
+2
 ```
 
 **输出：**
 
 ```text
-（对应正确结果）
+2=1+1;2=2
 ```
 
 ## 总结

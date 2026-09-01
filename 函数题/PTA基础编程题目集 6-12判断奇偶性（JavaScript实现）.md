@@ -16,7 +16,10 @@ function even(n) { /* ... */ }
 
 ```js
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 function even(n) { /* 你的代码将被嵌在这里 */ }
 
@@ -54,6 +57,16 @@ rl.on('line', (line) => {
 5 is odd.
 ```
 
+### 函数部分
+
+```text
+函数 even(n):
+    如果 n 除以 2 的余数为 0：
+        返回 1
+    否则：
+        返回 0
+```
+
 ## 解题思路
 
 这道题的核心是**整数取余判奇偶**：偶数 mod 2 = 0，奇数 mod 2 = ±1。关键细节是正确处理 0 与负数。
@@ -61,12 +74,14 @@ rl.on('line', (line) => {
 ### 核心问题分析
 
 1. **数学性质**：奇偶性只与绝对值有关，-6 和 6 都是偶数。
-2. **JavaScript 负数取余**：(-6)%2 的结果是 0（因为 2×(-3) = -6，余 0）；(-5)%2 = -1。因此对负数若直接取余判断"等于 1"会误判。
+2. **JavaScript 负数取余**：(-6)%2 的结果是 0（因为 2×(-3) = -6，余 0）；(-5)%2 = -1。
+   因此对负数若直接取余判断"等于 1"会误判。
 3. **零的特殊性**：0 是偶数，直接特判即可。
 
 ### 算法原理说明
 
 统一处理为"取绝对值→取余→判断"：
+
 - n == 0 → return 1（偶数）
 - n < 0 → n = -n（取正）
 - 再判断 n%2：结果 1 → 奇数返回 0；否则 → 偶数返回 1
@@ -94,7 +109,10 @@ rl.on('line', (line) => {
 // 空间复杂度：O(1) — 仅使用常数个辅助变量
 
 const readline = require('readline'); // 引入 readline 模块
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); // 创建输入输出接口
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); // 创建输入输出接口
 
 // 函数：even
 // 功能：判断奇偶性
@@ -120,21 +138,24 @@ rl.on('line', (line) => {
 });
 ```
 
-
 ## 代码流程说明
 
 ### 1. 主函数
+
 - 用 readline 读入 n（parseInt 解析）
 - even(n) 返回真：输出 "... is even."（console.log）
 - even(n) 返回假：输出 "... is odd."
 
 ### 2. even 函数：分支一 n === 0
+
 - return 1（零是偶数）
 
 ### 3. even 函数：分支二 n < 0
+
 - n = -n 取正，不改变奇偶性
 
 ### 4. even 函数：取余判断
+
 - temp = n % 2
 - temp === 1 → return 0（奇数）
 - 否则 → return 1（偶数）
@@ -156,6 +177,17 @@ flowchart TD
   H --> J
   I --> J
 ```
+
+### 复杂度分析
+
+- 时间复杂度：`O(1)`，只进行常数次判断和取余运算。
+- 空间复杂度：`O(1)`，不需要额外存储空间。
+
+### 常见易错点
+
+1. 0 是偶数，因此 `even(0)` 必须返回 1。
+2. 负数也可以直接通过 `n % 2 === 0` 判断；不要把负数的余数 `-1` 误认为偶数。
+3. 函数返回值约定为“偶数 1、奇数 0”，不要返回字符串或直接输出结果。
 
 ## 解题流程图
 
